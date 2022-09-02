@@ -1,5 +1,5 @@
 const {Router} = require('express');
-const db = require("../db/db");
+const db = require("../../db/db");
 const {hashPassword, comparePassword} = require('../utils/helpers');
 
 const router = Router();
@@ -9,7 +9,7 @@ router.post('/login', async (request, response) => {
     const {username, password} = request.body;
 
     if (!username || !password) {
-        return response.send(400);
+        return response.sendStatus(400);
     }
 
     const userDB = await db('users')
@@ -18,7 +18,7 @@ router.post('/login', async (request, response) => {
         .first();
 
     if (!userDB) {
-        return response.send(401);
+        return response.sendStatus(401);
     }
 
     const isPasswordValid = comparePassword(password, userDB.password);
@@ -28,12 +28,12 @@ router.post('/login', async (request, response) => {
         //сохраняем пользователя
         request.session.user = userDB;
 
-        return response.send(200);
+        return response.sendStatus(200);
     }
     else {
         console.log('Failed to authenticate');
 
-        return response.send(401);
+        return response.sendStatus(401);
     }
 });
 
@@ -64,7 +64,7 @@ router.use((req, res, next) => {
     if (req.session.user) {
         next();
     } else {
-        res.send(401);
+        res.sendStatus(401);
     }
 });
 
