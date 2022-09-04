@@ -27,7 +27,7 @@ router.get('/list', async (req, res) => {
     }
 });
 
-//транзакции
+//транзакции. Явно указывать коммит не нужно
 router.post('/update', async (req, res) => {
     const {id, username, email, category_id, name, region_id, city} = req.body;
     const dateNow = new Date().toISOString().slice(0, 19).replace('T', ' ');
