@@ -59,24 +59,12 @@ router.post('/register', async (req, res) => {
     }
 });
 
-//Проверка сессии текущего пользователя
+//Проверка сессии текущего пользователя.
 router.use((req, res, next) => {
     if (req.session.user) {
         next();
     } else {
         res.sendStatus(401);
-    }
-});
-
-//Список пользователей. Нельзя получить список если пользователь не выполнил вход
-router.get('/users', async (req, res) => {
-    let users = await db('users')
-        .select('id', 'username', 'email');
-
-    if (users) {
-        res.status(200).send(users);
-    } else {
-        res.status(404).send('No users found');
     }
 });
 
