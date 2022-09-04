@@ -25,7 +25,7 @@ router.post('/login', async (request, response) => {
 
     if (isPasswordValid) {
         console.log('Authenticated successfully!');
-        //сохраняем пользователя
+        //сохраняем пользователя в сессию
         request.session.user = userDB;
 
         return response.sendStatus(200);

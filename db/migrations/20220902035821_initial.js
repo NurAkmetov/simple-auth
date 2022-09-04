@@ -4,7 +4,7 @@
  */
 exports.up = function (knex) {
   return knex.schema
-    .createTable('users', function (table) {
+    .createTableIfNotExists('users', function (table) {
       table.increments('id').primary();
 	  table.string('username').unique();
       table.string('email');
