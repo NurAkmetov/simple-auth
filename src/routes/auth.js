@@ -37,6 +37,19 @@ router.post('/login', async (request, response) => {
     }
 });
 
+//Выход пользователя
+router.post('/logout', (req, res) => {
+    const sessionID = req.session.id;
+
+    req.sessionStore.destroy(sessionID, (err) => {
+        if(err){
+            return console.error(err);
+        }
+        console.log("The session has been destroyed!");
+        res.sendStatus(200);
+    })
+});
+
 //Регистрация нового пользователя
 router.post('/register', async (req, res) => {
     const {username, password, email, category_id, region_id} = req.body;
