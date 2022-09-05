@@ -39,7 +39,7 @@ router.post('/login', async (request, response) => {
 
 //Регистрация нового пользователя
 router.post('/register', async (req, res) => {
-    const {username, password, email} = req.body;
+    const {username, password, email, category_id, region_id} = req.body;
 
     const userDB = await db('users')
         .where('username', username)
@@ -53,18 +53,9 @@ router.post('/register', async (req, res) => {
         const hashedPassword = hashPassword(password);
 
         await db('users')
-            .insert({username, email, password: hashedPassword});
+            .insert({username, email, password: hashedPassword, category_id, region_id});
 
         res.status(201).send({msg: 'New user has been added!'});
-    }
-});
-
-//Проверка сессии текущего пользователя.
-router.use((req, res, next) => {
-    if (req.session.user) {
-        next();
-    } else {
-        res.sendStatus(401);
     }
 });
 

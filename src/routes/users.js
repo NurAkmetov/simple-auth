@@ -3,9 +3,18 @@ const db = require("../../db/db");
 
 const router = Router();
 
+//Проверка сессии текущего пользователя.
+router.use((req, res, next) => {
+    if (req.session.user) {
+        next();
+    } else {
+        res.sendStatus(401);
+    }
+});
+
 //Список пользователей.
-router.get('/list', async (req, res) => {
-    let users = await db('users')
+router.get('', async (req, res) => {
+    const users = await db('users')
         .join('categories', 'users.category_id', 'categories.id')
         .join('regions', 'users.region_id', 'regions.id')
         .select(
@@ -26,6 +35,30 @@ router.get('/list', async (req, res) => {
         res.status(404).send('No users found');
     }
 });
+
+// Поиск пользователя по идентификатору
+router.get('/:id',
+    async (req, res) => {
+        const {id} = req.params;
+
+        const user = await db('users')
+            .where('id', '=', id)
+            .select(
+                'id',
+                'username',
+                'email',
+                'category_id',
+                'region_id'
+            )
+            .first();
+
+        if (user) {
+            res.send(user);
+        } else {
+            res.sendStatus(404);
+        }
+    },
+);
 
 //транзакции. Явно указывать коммит не нужно
 router.post('/update', async (req, res) => {
